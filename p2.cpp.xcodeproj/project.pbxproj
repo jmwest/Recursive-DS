@@ -9,12 +9,9 @@
 /* Begin PBXBuildFile section */
 		2725D21A17EB53C5000B8ADF /* p2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2725D21917EB53C5000B8ADF /* p2.cpp */; };
 		2797613817EE485A00E8E4C9 /* p2TestCase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797613717EE485A00E8E4C9 /* p2TestCase.cpp */; };
-		27DF1B7017ECB57C00163B5D /* filter_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DF1B6717ECB57C00163B5D /* filter_test.cpp */; };
 		27DF1B7117ECB57C00163B5D /* p2.h in Headers */ = {isa = PBXBuildFile; fileRef = 27DF1B6917ECB57C00163B5D /* p2.h */; };
 		27DF1B7217ECB57C00163B5D /* recursive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DF1B6A17ECB57C00163B5D /* recursive.cpp */; };
 		27DF1B7317ECB57C00163B5D /* recursive.h in Headers */ = {isa = PBXBuildFile; fileRef = 27DF1B6B17ECB57C00163B5D /* recursive.h */; };
-		27DF1B7417ECB57C00163B5D /* simple_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DF1B6C17ECB57C00163B5D /* simple_test.cpp */; };
-		27DF1B7517ECB57C00163B5D /* treeins_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DF1B6E17ECB57C00163B5D /* treeins_test.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +45,7 @@
 			children = (
 				2725D21317EB5330000B8ADF /* Products */,
 				2797613717EE485A00E8E4C9 /* p2TestCase.cpp */,
+				2725D21917EB53C5000B8ADF /* p2.cpp */,
 				27DF1B6717ECB57C00163B5D /* filter_test.cpp */,
 				27DF1B6817ECB57C00163B5D /* filter_test.out */,
 				27DF1B6917ECB57C00163B5D /* p2.h */,
@@ -57,7 +55,6 @@
 				27DF1B6D17ECB57C00163B5D /* simple_test.out */,
 				27DF1B6E17ECB57C00163B5D /* treeins_test.cpp */,
 				27DF1B6F17ECB57C00163B5D /* treeins_test.out */,
-				2725D21917EB53C5000B8ADF /* p2.cpp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -133,10 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2725D21A17EB53C5000B8ADF /* p2.cpp in Sources */,
-				27DF1B7017ECB57C00163B5D /* filter_test.cpp in Sources */,
 				27DF1B7217ECB57C00163B5D /* recursive.cpp in Sources */,
-				27DF1B7417ECB57C00163B5D /* simple_test.cpp in Sources */,
-				27DF1B7517ECB57C00163B5D /* treeins_test.cpp in Sources */,
 				2797613817EE485A00E8E4C9 /* p2TestCase.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
