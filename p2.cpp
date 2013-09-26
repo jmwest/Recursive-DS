@@ -13,7 +13,7 @@ static int sum_helper(int sum, list_t list);
 static int product_helper(int product, list_t list);
 static int addNumbers(int x, int y);
 static int multiplyNumbers(int x, int y);
-static int algebraic_helpter(int x, int y);
+static int algebraic_helper(int result, list_t list, int (*fn)(int, int));
 
 static list_t reverse_helper(list_t list, list_t reverseList);
 static list_t append_helper(list_t first, list_t second);
@@ -65,8 +65,20 @@ static int product_helper(int product, list_t list)
 
 int accumulate(list_t list, int (*fn)(int, int), int identity)
 {
-    
-    return 0;
+    if (list_isEmpty(list)) {
+        return identity;
+    }
+
+    return algebraic_helper(fn(identity, list_first(list)), list_rest(list), fn);
+}
+
+static int algebraic_helper(int result, list_t list, int (*fn)(int, int))
+{
+    if (list_isEmpty(list)) {
+        return result;
+    }
+
+    return algebraic_helper(fn(result, list_first(list)), list_rest(list), fn);
 }
 
 list_t reverse(list_t list)
