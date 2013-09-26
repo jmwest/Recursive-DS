@@ -15,7 +15,6 @@
 /* Begin PBXFileReference section */
 		2725D21217EB5330000B8ADF /* libp2.cpp.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libp2.cpp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		2725D21917EB53C5000B8ADF /* p2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p2.cpp; sourceTree = "<group>"; };
-		27937B1917F4988C002B98CC /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test.cpp; sourceTree = "<group>"; };
 		2797613717EE485A00E8E4C9 /* p2TestCase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p2TestCase.cpp; sourceTree = "<group>"; };
 		27DF1B6717ECB57C00163B5D /* filter_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = filter_test.cpp; sourceTree = "<group>"; };
 		27DF1B6817ECB57C00163B5D /* filter_test.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = filter_test.out; sourceTree = "<group>"; };
@@ -43,7 +42,6 @@
 			isa = PBXGroup;
 			children = (
 				2725D21317EB5330000B8ADF /* Products */,
-				27937B1917F4988C002B98CC /* test.cpp */,
 				2797613717EE485A00E8E4C9 /* p2TestCase.cpp */,
 				2725D21917EB53C5000B8ADF /* p2.cpp */,
 				27DF1B6717ECB57C00163B5D /* filter_test.cpp */,
