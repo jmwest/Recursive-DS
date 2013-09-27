@@ -9,7 +9,6 @@
 #include <iostream>
 #include "p2.h"
 
-static int product_helper(int product, list_t list);
 static int addNumbers(int x, int y);
 static int multiplyNumbers(int x, int y);
 static int algebraic_helper(int result, list_t list, int (*fn)(int, int));
@@ -38,7 +37,7 @@ int product(list_t list)
         return 1;
     }
 
-    return algebraic_helper(multiplyNumbers(list_first(list), 0), list_rest(list), multiplyNumbers);
+    return algebraic_helper(multiplyNumbers(list_first(list), 1), list_rest(list), multiplyNumbers);
 }
 
 int accumulate(list_t list, int (*fn)(int, int), int identity)
