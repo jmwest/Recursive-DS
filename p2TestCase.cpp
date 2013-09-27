@@ -15,14 +15,15 @@
 
 using namespace std;
 
-void makeGlobalLists();
-void makeReverseLists(vector <list_t> &reverseList, vector <list_t> &reverseCorrectList);
+void makeGlobalLists(vector <list_t> &inputList);
+void makeReverseLists(vector <list_t> &reverseCorrectList);
+void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect);
 bool checkListsEqual(list_t first, list_t second, bool equal);
     // REQUIRES: equal is passed in as true
 
 void testSumFunction(int &totalCases, int &casesPassed);
 void testProductFunction(int &totalCases, int &casesPassed);
-void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), vector <list_t> &results, const vector <list_t> &correct, const string &fnName);
+void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName);
 
 bool DIAGNOSTIC = false;
 
@@ -44,8 +45,10 @@ list_t STRESS_LIST4;
 int main()
 {
     string userInput;
-    vector <list_t> reverseList(8, list_make());
-    vector <list_t> reverseCorrectList(8, list_make());
+    vector <list_t> inputList;
+    vector <list_t> reverseCorrectList;
+    vector <list_t> oddCorrectList;
+    vector <list_t> evenCorrectList;
 
     int totalCases = 0;
     int casesPassed = 0;
@@ -60,31 +63,24 @@ int main()
         DIAGNOSTIC = false;
     }
 
-    makeGlobalLists();
-    makeReverseLists(reverseList, reverseCorrectList);
-
-    for (int i = 0; i < 8; i++) {
-        list_print(reverseCorrectList.at(i));
-    }
-
-    int x = 0;
-    for (int j = 0; j < 100000; j++) {
-        x = x + j;
-    }
-    cout << "\nx: " << x << endl;
+    makeGlobalLists(inputList);
+    makeReverseLists(reverseCorrectList);
+    makeFilterLists(oddCorrectList, evenCorrectList);
 
     cout << endl << "Starting test cases for p2..." << endl << "-----------------------------" << endl;
 
     testSumFunction(totalCases, casesPassed);
     testProductFunction(totalCases, casesPassed);
-    testListFNFunction(totalCases, casesPassed, reverse, reverseList, reverseCorrectList, "Reverse");
+    testListFNFunction(totalCases, casesPassed, reverse, inputList, reverseCorrectList, "Reverse");
+    testListFNFunction(totalCases, casesPassed, filter_even, inputList, evenCorrectList, "Filter Even");
+    testListFNFunction(totalCases, casesPassed, filter_odd, inputList, oddCorrectList, "Filter Odd");
 
     cout << "\nTest Cases passed: " << casesPassed << endl << " Test Case total : " << totalCases << endl << endl;
 
     return 0;
 }
 
-void makeGlobalLists()
+void makeGlobalLists(vector <list_t> &inputList)
 {
     STANDARD_LIST1 = list_make();
     STANDARD_LIST2 = list_make();
@@ -116,37 +112,110 @@ void makeGlobalLists()
     // STANDARD_LIST3 is (2,3,4,5)
     // STANDARD_LIST4 is (1,1,1,1)
 
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 9999; i >= 0; i--) {
         STRESS_LIST1 = list_make(1, STRESS_LIST1);
-        STRESS_LIST2 = list_make((i % 10), STRESS_LIST1);
-        STRESS_LIST3 = list_make((i % 100), list_make(4, STRESS_LIST1));
+        STRESS_LIST2 = list_make((i % 10), STRESS_LIST2);
+
+        if (i < 100) {
+            STRESS_LIST3 = list_make(i, STRESS_LIST3);
+        }
     }
-    // STRESS_LIST1 is 100,000 1's
-    // STRESS_LIST2 is (0,1,2,3,4,5,6,7,8,9,0,1 ....)
-    // STRESS_LIST3 is (0,1,2,3,4,5,6,7,8,9,10,11,12 ....)
+    // STRESS_LIST1 is 10,000 1's
+    // STRESS_LIST2 is (0,1,2,3,4,5,6,7,8,9,0,1 ...)
+    // STRESS_LIST3 is (0,1,2,3,4,5 ... 96,97,98,99)
+
+    inputList.push_back(STANDARD_LIST1);
+    inputList.push_back(STANDARD_LIST2);
+    inputList.push_back(STANDARD_LIST3);
+    inputList.push_back(STANDARD_LIST4);
+    inputList.push_back(EDGE_LIST1);
+    inputList.push_back(EDGE_LIST2);
+    inputList.push_back(EDGE_LIST3);
+    inputList.push_back(EDGE_LIST4);
+    inputList.push_back(STRESS_LIST1);
+    inputList.push_back(STRESS_LIST2);
+    inputList.push_back(STRESS_LIST3);
 
     return;
 }
 
-void makeReverseLists(vector <list_t> &reverseList, vector <list_t> &reverseCorrectList)
+void makeReverseLists(vector <list_t> &reverseCorrectList)
 {
-    reverseList.at(0) = STANDARD_LIST1;
-    reverseList.at(1) = STANDARD_LIST2;
-    reverseList.at(2) = STANDARD_LIST3;
-    reverseList.at(3) = STANDARD_LIST4;
-    reverseList.at(4) = EDGE_LIST1;
-    reverseList.at(5) = EDGE_LIST2;
-    reverseList.at(6) = EDGE_LIST3;
-    reverseList.at(7) = EDGE_LIST4;
-    
-    reverseCorrectList.at(0) = STANDARD_LIST2;
-    reverseCorrectList.at(1) = STANDARD_LIST1;
-    reverseCorrectList.at(2) = list_make(5, list_make(4, list_make(3, list_make(2, list_make()))));
-    reverseCorrectList.at(3) = STANDARD_LIST4;
-    reverseCorrectList.at(4) = EDGE_LIST1;
-    reverseCorrectList.at(5) = EDGE_LIST2;
-    reverseCorrectList.at(6) = EDGE_LIST3;
-    reverseCorrectList.at(7) = list_make(2, list_make(4, list_make()));
+    reverseCorrectList.push_back(STANDARD_LIST2);
+    reverseCorrectList.push_back(STANDARD_LIST1);
+    reverseCorrectList.push_back(list_make(5, list_make(4, list_make(3, list_make(2, list_make())))));
+    reverseCorrectList.push_back(STANDARD_LIST4);
+    reverseCorrectList.push_back(EDGE_LIST1);
+    reverseCorrectList.push_back(EDGE_LIST2);
+    reverseCorrectList.push_back(EDGE_LIST3);
+    reverseCorrectList.push_back(list_make(2, list_make(4, list_make())));
+    reverseCorrectList.push_back(STRESS_LIST1);
+
+    list_t stressCorrect2 = list_make();
+    list_t stressCorrect3 = list_make();
+    for (int i = 0; i < 10000; i++) {
+        stressCorrect2 = list_make((i % 10), stressCorrect2);
+
+        if (i < 100) {
+            stressCorrect3 = list_make(i, stressCorrect3);
+        }
+    }
+
+    reverseCorrectList.push_back(stressCorrect2);
+    reverseCorrectList.push_back(stressCorrect3);
+
+    return;
+}
+
+void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect)
+{
+    filterOddCorrect.push_back(list_make(1, list_make(3, list_make())));
+    filterOddCorrect.push_back(list_make(3, list_make(1, list_make())));
+    filterOddCorrect.push_back(list_make(3, list_make(5, list_make())));
+    filterOddCorrect.push_back(STANDARD_LIST4);
+    filterOddCorrect.push_back(list_make());
+    filterOddCorrect.push_back(list_make());
+    filterOddCorrect.push_back(list_make(7, list_make()));
+    filterOddCorrect.push_back(list_make());
+    filterOddCorrect.push_back(STRESS_LIST1);
+
+    filterEvenCorrect.push_back(list_make(2, list_make(4, list_make())));
+    filterEvenCorrect.push_back(list_make(4, list_make(2, list_make())));
+    filterEvenCorrect.push_back(list_make(2, list_make(4, list_make())));
+    filterEvenCorrect.push_back(list_make());
+    filterEvenCorrect.push_back(list_make());
+    filterEvenCorrect.push_back(list_make(0, list_make()));
+    filterEvenCorrect.push_back(list_make());
+    filterEvenCorrect.push_back(list_make(4, list_make(2, list_make())));
+    filterEvenCorrect.push_back(list_make());
+
+    list_t oddStressList1 = list_make();
+    list_t oddStressList2 = list_make();
+    list_t evenStressList1 = list_make();
+    list_t evenStressList2 = list_make();
+
+    for (int i = 9999; i >= 0; i--) {
+        if ((i % 2) == 0) {
+            evenStressList1 = list_make((i % 10), evenStressList1);
+
+            if (i < 100) {
+                evenStressList2 = list_make(i, evenStressList2);
+            }
+        }
+        else {
+            oddStressList1 = list_make((i % 10), oddStressList1);
+
+            if (i < 100) {
+                oddStressList2 = list_make(i, oddStressList2);
+            }
+        }
+    }
+
+    filterOddCorrect.push_back(oddStressList1);
+    filterOddCorrect.push_back(oddStressList2);
+
+    filterEvenCorrect.push_back(evenStressList1);
+    filterEvenCorrect.push_back(evenStressList2);
 
     return;
 }
@@ -166,7 +235,7 @@ bool checkListsEqual(list_t first, list_t second, bool equal)
 
 void testSumFunction(int &totalCases, int &casesPassed)
 {
-    vector <int> sum_results(11, 0);
+    vector <int> sum_results(12, 0);
 
     sum_results.at(0) = sum(STANDARD_LIST1);
     totalCases++;
@@ -291,12 +360,12 @@ void testSumFunction(int &totalCases, int &casesPassed)
     sum_results.at(8) = sum(STRESS_LIST1);
     totalCases++;
     
-    if (sum_results.at(8) == 100000) {
+    if (sum_results.at(8) == 10000) {
         casesPassed++;
-        cout << endl << ".";
+        cout << ".";
     }
     else {
-        cout << endl << "x";
+        cout << "x";
         
         if (DIAGNOSTIC) {
             cout << "\nSum Case 9 failed with result: " << sum_results.at(8) << endl;
@@ -306,30 +375,30 @@ void testSumFunction(int &totalCases, int &casesPassed)
     sum_results.at(9) = sum(STRESS_LIST2);
     totalCases++;
     
-    if (sum_results.at(9) == 450000) {
+    if (sum_results.at(9) == 45000) {
         casesPassed++;
-        cout << endl << ".";
+        cout << ".";
     }
     else {
-        cout << endl << "x";
+        cout << "x";
         
         if (DIAGNOSTIC) {
-            cout << "\nSum Case 10 failed with result: " << sum_results.at(8) << endl;
+            cout << "\nSum Case 10 failed with result: " << sum_results.at(9) << endl;
         }
     }
-    
-    sum_results.at(10) = sum(STRESS_LIST1);
+
+    sum_results.at(10) = sum(STRESS_LIST3);
     totalCases++;
-    
-    if (sum_results.at(10) == 100000) {
+
+    if (sum_results.at(10) == 4950) {
         casesPassed++;
-        cout << endl << ".";
+        cout << ".";
     }
     else {
-        cout << endl << "x";
+        cout << "x";
         
         if (DIAGNOSTIC) {
-            cout << "\nSum Case 1 failed with result: " << sum_results.at(0) << endl;
+            cout << "\nSum Case 11 failed with result: " << sum_results.at(10) << endl;
         }
     }
 
@@ -378,7 +447,7 @@ void testProductFunction(int &totalCases, int &casesPassed)
     
     product_edge4 = product(EDGE_LIST4);
     totalCases++;
-    cout << "." << endl;
+    cout << ".";
     
     if (product_result1 == 24) {
         casesPassed++;
@@ -439,141 +508,30 @@ void testProductFunction(int &totalCases, int &casesPassed)
     return;
 }
 
-void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), vector <list_t> &results, const vector <list_t> &correct, const string &fnName)
+void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName)
 {
-    results.at(0) = fn(STANDARD_LIST1);
-    totalCases++;
-    
-    if (checkListsEqual(results.at(0), correct.at(0), true)) {
-        casesPassed++;
-        cout << ".";
-    }
-    else {
-        cout << "x";
-        
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 1 failed with result: ";
-            list_print(results.at(0));
-            cout << endl;
-        }
-    }
-    
-    results.at(1) = fn(STANDARD_LIST2);
-    totalCases++;
-    
-    if (checkListsEqual(results.at(1), correct.at(1), true)) {
-        casesPassed++;
-        cout << ".";
-    }
-    else {
-        cout << "x";
-        
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 2 failed with result: ";
-            list_print(results.at(1));
-            cout << endl;
-        }
-    }
-    
-    results.at(2) = fn(STANDARD_LIST3);
-    totalCases++;
-    
-    if (checkListsEqual(results.at(2), correct.at(2), true)) {
-        casesPassed++;
-        cout << ".";
-    }
-    else {
-        cout << "x";
-        
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 3 failed with result: ";
-            list_print(results.at(2));
-            cout << endl;
-        }
-    }
+    vector <list_t> results(inputs.size());
 
-    results.at(3) = fn(STANDARD_LIST4);
-    totalCases++;
+    cout << endl;
 
-    if (checkListsEqual(results.at(3), correct.at(3), true)) {
-        casesPassed++;
-        cout << ".";
-    }
-    else {
-        cout << "x";
-        
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 4 failed with result: ";
-            list_print(results.at(3));
-            cout << endl;
+    for (unsigned int i = 0; i < inputs.size(); i++)
+    {
+
+        results.at(i) = fn(inputs.at(i));
+        totalCases++;
+
+        if (checkListsEqual(results.at(i), correct.at(i), true)) {
+            casesPassed++;
+            cerr << ".";
         }
-    }
-
-    results.at(4) = fn(EDGE_LIST1);
-    totalCases++;
-
-    if (checkListsEqual(results.at(4), correct.at(4), true)) {
-        casesPassed++;
-        cout << ".";
-    }
-    else {
-        cout << "x";
-
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 5 failed with result: ";
-            list_print(results.at(4));
-            cout << endl;
-        }
-    }
-
-    results.at(5) = fn(EDGE_LIST2);
-    totalCases++;
-
-    if (checkListsEqual(results.at(5), correct.at(5), true)) {
-        casesPassed++;
-        cout << ".";
-    }
-    else {
-        cout << "x";
-        
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 6 failed with result: ";
-            list_print(results.at(5));
-            cout << endl;
-        }
-    }
-    
-    results.at(6) = fn(EDGE_LIST3);
-    totalCases++;
-    
-    if (checkListsEqual(results.at(6), correct.at(6), true)) {
-        casesPassed++;
-        cout << ".";
-    }
-    else {
-        cout << "x";
-        
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 7 failed with result: ";
-            list_print(results.at(6));
-            cout << endl;
-        }
-    }
-    
-    results.at(7) = fn(EDGE_LIST4);
-    totalCases++;
-    
-    if (checkListsEqual(results.at(7), correct.at(7), true)) {
-        casesPassed++;
-        cout << "." << endl;
-    }
-    else {
-        cout << "x" << endl;
-        
-        if (DIAGNOSTIC) {
-            cout << "\n" << fnName << " Case 8 failed with result: ";
-            list_print(results.at(7));
-            cout << endl;
+        else {
+            cout << "x";
+            
+            if (DIAGNOSTIC) {
+                cout << "\n" << fnName << " Case " << i + 1 << " failed with result: ";
+                list_print(results.at(i));
+                cout << endl;
+            }
         }
     }
 
