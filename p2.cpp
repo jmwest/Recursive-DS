@@ -9,6 +9,8 @@
 #include <iostream>
 #include "p2.h"
 
+using namespace std;
+
 static int addNumbers(int x, int y);
 static int multiplyNumbers(int x, int y);
 static int algebraic_helper(int result, list_t list, int (*fn)(int, int));
@@ -19,7 +21,11 @@ static list_t append_helper(list_t first, list_t second);
 static list_t filter_odd_or_even_helper(list_t list, list_t filteredList, int remainderValue);
 static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int));
 
-static list_t insert_list_helper(list_t firstBeginning, list_t firstEnding, list_t second, unsigned int n);
+static list_t rotate_helper(list_t list, list_t rotatedList, unsigned int n);
+static list_t insert_list_helper(list_t first, list_t second, list_t combined, unsigned int n);
+static list_t chop_helper(list_t list, list_t list_chopped, unsigned int n);
+
+static int fib_tail_helper(int n, int currentN, int currentNumber, int result);
 
 //--------------------------------------------------------//
 int sum(list_t list)
@@ -72,9 +78,7 @@ static int algebraic_helper(int result, list_t list, int (*fn)(int, int))
 //--------------------------------------------------------//
 list_t reverse(list_t list)
 {
-    list_t reverseList = list_make();
-
-    return reverse_helper(list, reverseList);
+    return reverse_helper(list, list_make());
 }
 
 static list_t reverse_helper(list_t list, list_t reverseList)
@@ -95,10 +99,8 @@ list_t append(list_t first, list_t second)
 list_t append_helper(list_t first, list_t second)
 {
     if (!list_isEmpty(first)) {
-        first = list_rest(first);
-        second = list_make(list_first(first), second);
+        return append_helper(list_rest(first), list_make(list_first(first), second));
 
-        return append_helper(first, second);
     }
     else {
         return second;
@@ -160,6 +162,29 @@ static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int))
 }
 
 //--------------------------------------------------------//
+list_t rotate(list_t list, unsigned int n)
+{
+    
+    return rotate_helper(list, list_make(), n);
+}
+
+static list_t rotate_helper(list_t list, list_t rotatedList, unsigned int n)
+{
+    if (n != 0) {
+        if ((n - 1) == 0) {
+            return rotate_helper(reverse(list_rest(list)), reverse(list_make(list_first(list), rotatedList)), n - 1);
+        }
+
+        return rotate_helper(list_rest(list), list_make(list_first(list), rotatedList), n - 1);
+    }
+    else if (!list_isEmpty(list)) {
+        return rotate_helper(list_rest(list), list_make(list_first(list), rotatedList), n);
+    }
+
+    return reverse(rotatedList);
+}
+
+//--------------------------------------------------------//
 list_t insert_list(list_t first, list_t second, unsigned int n)
 {
     if (list_isEmpty(first)) {
@@ -169,19 +194,103 @@ list_t insert_list(list_t first, list_t second, unsigned int n)
         return first;
     }
 
-    return insert_list_helper(first, list_make(), second, n);
+    return insert_list_helper(first, second, list_make(), n);
 }
 
-static list_t insert_list_helper(list_t firstBeginning, list_t firstEnding, list_t second, unsigned int n)
+static list_t insert_list_helper(list_t first, list_t second, list_t combined, unsigned int n)
 {
-    if (n == 1) {
-
+    if (n != 0) {
+        return insert_list_helper(list_rest(first), second, list_make(list_first(first), combined), n - 1);
     }
-    return second;
+    else {
+        if (!list_isEmpty(second)) {
+            return insert_list_helper(first, list_rest(second), list_make(list_first(second), combined), n);
+        }
+        else if (!list_isEmpty(first)) {
+            return insert_list_helper(list_rest(first), second, list_make(list_first(first), combined), n);
+        }
+    }
+    return reverse(combined);
 }
 
 //--------------------------------------------------------//
 list_t chop(list_t l, unsigned int n)
 {
-    return l;
+    return chop_helper(reverse(l), list_make(), n);
+}
+
+static list_t chop_helper(list_t list, list_t list_chopped, unsigned int n)
+{
+    if (n == 0) {
+        return reverse(list_chopped);
+    }
+
+    return chop_helper(list_rest(list), list_make(list_first(list), list_chopped), n - 1);
+}
+
+//--------------------------------------------------------//
+int fib(int n)
+{
+    if (n == 0) {
+        return 0;
+    }
+    else if (n == 1) {
+        return 1;
+    }
+
+    return fib(n - 1) + fib(n - 2);
+}
+
+//--------------------------------------------------------//
+int fib_tail(int n)
+{
+    if (n == 0) {
+        return 0;
+    }
+    else if (n == 1) {
+        return 1;
+    }
+
+    return fib_tail_helper(n, 2, 0, 1);
+}
+
+static int fib_tail_helper(int n, int currentN, int currentNumber, int result)
+{
+    if (currentN + 1 == n) {
+        return currentNumber + result;
+    }
+
+    return fib_tail_helper(n, currentN + 1, result, currentNumber + result);
+}
+
+//--------------------------------------------------------//
+int tree_sum(tree_t tree)
+{
+    if (tree_isEmpty(tree)) {
+        return 0;
+    }
+
+    return tree_elt(tree) + tree_sum(tree_left(tree)) + tree_sum(tree_right(tree));
+}
+
+//--------------------------------------------------------//
+list_t traversal(tree_t tree)
+{
+    if (tree_isEmpty(tree)) {
+        return list_make();
+    }
+
+    return list_make();
+}
+
+//--------------------------------------------------------//
+bool contained_by(tree_t A, tree_t B)
+{
+    return false;
+}
+
+//--------------------------------------------------------//
+tree_t insert_tree(int elt, tree_t tree)
+{
+    return tree;
 }

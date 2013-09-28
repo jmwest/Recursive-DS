@@ -18,12 +18,15 @@ using namespace std;
 void makeGlobalLists(vector <list_t> &inputList);
 void makeReverseLists(vector <list_t> &reverseCorrectList);
 void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect);
+void makeChopLists(vector <list_t> &chopCorrect, vector <int> numbers);
+
 bool checkListsEqual(list_t first, list_t second, bool equal);
     // REQUIRES: equal is passed in as true
 
 void testSumFunction(int &totalCases, int &casesPassed);
 void testProductFunction(int &totalCases, int &casesPassed);
 void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName);
+void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, unsigned int), const vector <list_t> &inputs, const vector <int> &numbers, const vector <list_t> &correct, const string &fnName);
 
 bool DIAGNOSTIC = false;
 
@@ -222,8 +225,14 @@ void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterE
 
 bool checkListsEqual(list_t first, list_t second, bool equal)
 {
-    if (list_isEmpty(first) || list_isEmpty(second)) {
+    if (list_isEmpty(first) && list_isEmpty(second)) {
         return equal;
+    }
+    else if (list_isEmpty(first) && !list_isEmpty(second)) {
+        return false;
+    }
+    else if (!list_isEmpty(first) && list_isEmpty(second)) {
+        return false;
     }
 
     if (list_first(first) != list_first(second)) {
@@ -535,5 +544,35 @@ void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t),
         }
     }
 
+    return;
+}
+
+void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, unsigned int), const vector <list_t> &inputs, const vector <int> &numbers, const vector <list_t> &correct, const string &fnName)
+{
+    vector <list_t> results(inputs.size());
+    
+    cout << endl;
+    
+    for (unsigned int i = 0; i < inputs.size(); i++)
+    {
+        
+        results.at(i) = fn(inputs.at(i), numbers.at(i));
+        totalCases++;
+        
+        if (checkListsEqual(results.at(i), correct.at(i), true)) {
+            casesPassed++;
+            cerr << ".";
+        }
+        else {
+            cout << "x";
+            
+            if (DIAGNOSTIC) {
+                cout << "\n" << fnName << " Case " << i + 1 << " failed with result: ";
+                list_print(results.at(i));
+                cout << endl;
+            }
+        }
+    }
+    
     return;
 }

@@ -3,8 +3,7 @@
 
 using namespace std;
 
-int
-main()
+int main()
 {
     int i;
     list_t listA;
@@ -27,4 +26,6 @@ main()
     cout << endl;
     list_print(append(listA, listB));
     cout << endl;
+
+    return 0;
 }
