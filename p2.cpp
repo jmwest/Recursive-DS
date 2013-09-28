@@ -276,11 +276,18 @@ int tree_sum(tree_t tree)
 //--------------------------------------------------------//
 list_t traversal(tree_t tree)
 {
-    if (tree_isEmpty(tree)) {
-        return list_make();
+    if (tree_isEmpty(tree_left(tree)) && tree_isEmpty(tree_right(tree))) {
+        return list_make(tree_elt(tree), list_make());
     }
-
-    return list_make();
+    else if (tree_isEmpty(tree_left(tree)) && !tree_isEmpty(tree_right(tree))) {
+        return list_make(tree_elt(tree), traversal(tree_right(tree)));
+    }
+    else if (!tree_isEmpty(tree_left(tree)) && tree_isEmpty(tree_right(tree))) {
+        return reverse(list_make(tree_elt(tree), traversal(tree_left(tree))));
+    }
+    else {
+        return append(traversal(tree_left(tree)), list_make(tree_elt(tree), traversal(tree_right(tree))));
+    }
 }
 
 //--------------------------------------------------------//
