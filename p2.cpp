@@ -23,7 +23,7 @@ static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int));
 
 static list_t rotate_helper(list_t list, list_t rotatedList, unsigned int n);
 static list_t insert_list_helper(list_t first, list_t second, list_t combined, unsigned int n);
-static list_t chop_helper(list_t list, list_t list_chopped, unsigned int n);
+static list_t chop_helper(list_t list, unsigned int n);
 
 static int fib_tail_helper(int n, int currentN, int currentNumber, int result);
 
@@ -166,7 +166,10 @@ static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int))
 //--------------------------------------------------------//
 list_t rotate(list_t list, unsigned int n)
 {
-    
+    if (list_isEmpty(list)) {
+        return list;
+    }
+
     return rotate_helper(list, list_make(), n);
 }
 
@@ -218,16 +221,16 @@ static list_t insert_list_helper(list_t first, list_t second, list_t combined, u
 //--------------------------------------------------------//
 list_t chop(list_t l, unsigned int n)
 {
-    return chop_helper(reverse(l), list_make(), n);
+    return chop_helper(reverse(l), n);
 }
 
-static list_t chop_helper(list_t list, list_t list_chopped, unsigned int n)
+static list_t chop_helper(list_t list, unsigned int n)
 {
     if (n == 0) {
-        return reverse(list_chopped);
+        return reverse(list);
     }
 
-    return chop_helper(list_rest(list), list_make(list_first(list), list_chopped), n - 1);
+    return chop_helper(list_rest(list), n - 1);
 }
 
 //--------------------------------------------------------//

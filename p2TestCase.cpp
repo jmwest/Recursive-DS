@@ -16,19 +16,25 @@
 using namespace std;
 
 void makeGlobalLists(vector <list_t> &inputList);
+void makeAccumulateLists(vector <int> &accumulateCorrect);
 void makeReverseLists(vector <list_t> &reverseCorrectList);
+void makeAppendLists(vector <list_t> &appendCorrect);
 void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect);
-void makeChopLists(vector <list_t> &chopCorrect, vector <int> numbers);
+void makeRotateLists(vector <list_t> &rotateCorrect, vector <int> &numbers);
+void makeChopLists(vector <list_t> &chopCorrect, vector <int> &numbers);
 
 bool checkListsEqual(list_t first, list_t second, bool equal);
     // REQUIRES: equal is passed in as true
 
 void testSumFunction(int &totalCases, int &casesPassed);
 void testProductFunction(int &totalCases, int &casesPassed);
+void testAccumulateFunction(int &totalCases, int &casesPassed, const vector <list_t> &inputs);
 void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName);
+void testAppendFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName);
 void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, unsigned int), const vector <list_t> &inputs, const vector <int> &numbers, const vector <list_t> &correct, const string &fnName);
 
-
+int addition(int x, int y);
+int multiplication(int x, int y);
 
 bool DIAGNOSTIC = false;
 
@@ -52,8 +58,14 @@ int main()
     string userInput;
     vector <list_t> inputList;
     vector <list_t> reverseCorrectList;
+    vector <list_t> appendCorrect;
     vector <list_t> oddCorrectList;
     vector <list_t> evenCorrectList;
+    vector <list_t> filterCorrect;
+    vector <list_t> rotateCorrect;
+    vector <list_t> chopCorrect;
+    vector <int> rotateNumbers;
+    vector <int> chopLength;
 
     int totalCases = 0;
     int casesPassed = 0;
@@ -70,17 +82,24 @@ int main()
 
     makeGlobalLists(inputList);
     makeReverseLists(reverseCorrectList);
+    makeAppendLists(appendCorrect);
     makeFilterLists(oddCorrectList, evenCorrectList);
+    makeRotateLists(rotateCorrect, rotateNumbers);
+    makeChopLists(chopCorrect, chopLength);
 
     cout << endl << "Starting test cases for p2..." << endl << "-----------------------------" << endl;
 
     testSumFunction(totalCases, casesPassed);
     testProductFunction(totalCases, casesPassed);
+    testAccumulateFunction(totalCases, casesPassed, inputList);
     testListFNFunction(totalCases, casesPassed, reverse, inputList, reverseCorrectList, "Reverse");
+    testAppendFunction(totalCases, casesPassed, append, inputList, appendCorrect, "Append");
     testListFNFunction(totalCases, casesPassed, filter_even, inputList, evenCorrectList, "Filter Even");
     testListFNFunction(totalCases, casesPassed, filter_odd, inputList, oddCorrectList, "Filter Odd");
+    testRotateChopFunction(totalCases, casesPassed, rotate, inputList, rotateNumbers, rotateCorrect, "Rotate");
+    testRotateChopFunction(totalCases, casesPassed, chop, inputList, chopLength, chopCorrect, "Chop");
 
-    cout << "\nTest Cases passed: " << casesPassed << endl << " Test Case total : " << totalCases << endl << endl;
+    cout << "\n\nTest Cases passed: " << casesPassed << endl << " Test Case total : " << totalCases << endl << endl;
 
     return 0;
 }
@@ -144,6 +163,25 @@ void makeGlobalLists(vector <list_t> &inputList)
     return;
 }
 
+void makeAccumulateLists(vector <int> &accumulateCorrect)
+{
+    accumulateCorrect.push_back(10);
+    accumulateCorrect.push_back(24);
+    accumulateCorrect.push_back(14);
+    accumulateCorrect.push_back(1);
+
+    accumulateCorrect.push_back(0);
+    accumulateCorrect.push_back(0);
+    accumulateCorrect.push_back(7);
+    accumulateCorrect.push_back(8);
+
+    accumulateCorrect.push_back(1);
+    accumulateCorrect.push_back(45000);
+    accumulateCorrect.push_back(4950);
+
+    return;
+}
+
 void makeReverseLists(vector <list_t> &reverseCorrectList)
 {
     reverseCorrectList.push_back(STANDARD_LIST2);
@@ -168,6 +206,32 @@ void makeReverseLists(vector <list_t> &reverseCorrectList)
 
     reverseCorrectList.push_back(stressCorrect2);
     reverseCorrectList.push_back(stressCorrect3);
+
+    return;
+}
+
+void makeAppendLists(vector <list_t> &appendCorrect)
+{
+    appendCorrect.push_back(list_make(1, list_make(2, list_make(3, list_make(4, STANDARD_LIST1)))));
+    appendCorrect.push_back(list_make(4, list_make(3, list_make(2, list_make(1, STANDARD_LIST2)))));
+    appendCorrect.push_back(list_make(2, list_make(3, list_make(4, list_make(5, STANDARD_LIST3)))));
+    appendCorrect.push_back(list_make(1, list_make(1, list_make(1, list_make(1, STANDARD_LIST4)))));
+
+    appendCorrect.push_back(list_make());
+    appendCorrect.push_back(list_make(0, list_make(0, list_make())));
+    appendCorrect.push_back(list_make(7, list_make(7, list_make())));
+    appendCorrect.push_back(list_make(4, list_make(2, EDGE_LIST4)));
+
+    list_t stressList1 = list_make();
+    list_t stressList2 = list_make();
+
+    for (int i = 19999; i >= 0; i--) {
+        stressList1 = list_make(1, stressList1);
+        stressList2 = list_make((i % 10), stressList2);
+    }
+
+    appendCorrect.push_back(stressList1);
+    appendCorrect.push_back(stressList2);
 
     return;
 }
@@ -224,6 +288,87 @@ void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterE
 
     return;
 }
+
+void makeRotateLists(vector <list_t> &rotateCorrect, vector <int> &numbers)
+{
+    numbers.push_back(2);
+    numbers.push_back(1);
+    numbers.push_back(0);
+    numbers.push_back(2);
+
+    numbers.push_back(20);
+    numbers.push_back(250);
+    numbers.push_back(1000);
+    numbers.push_back(57);
+
+    numbers.push_back(2);
+    numbers.push_back(30);
+    numbers.push_back(100);
+
+    rotateCorrect.push_back(list_make(3, list_make(4, list_make(1, list_make(2, list_make())))));
+    rotateCorrect.push_back(list_make(3, list_make(2, list_make(1, list_make(4, list_make())))));
+    rotateCorrect.push_back(STANDARD_LIST3);
+    rotateCorrect.push_back(STANDARD_LIST4);
+
+    rotateCorrect.push_back(EDGE_LIST1);
+    rotateCorrect.push_back(EDGE_LIST2);
+    rotateCorrect.push_back(EDGE_LIST3);
+    rotateCorrect.push_back(list_make(2, list_make(4, list_make())));
+
+    rotateCorrect.push_back(STRESS_LIST1);
+    rotateCorrect.push_back(STRESS_LIST2);
+    rotateCorrect.push_back(STRESS_LIST3);
+
+    return;
+}
+
+void makeChopLists(vector <list_t> &chopCorrect, vector <int> &numbers)
+{
+    numbers.push_back(2);
+    numbers.push_back(1);
+    numbers.push_back(0);
+    numbers.push_back(4);
+
+    numbers.push_back(0);
+    numbers.push_back(0);
+    numbers.push_back(1);
+    numbers.push_back(1);
+
+    numbers.push_back(9999);
+    numbers.push_back(1210);
+    numbers.push_back(57);
+
+    chopCorrect.push_back(list_make(1, list_make(2, list_make())));
+    chopCorrect.push_back(list_make(4, list_make(3, list_make(2, list_make()))));
+    chopCorrect.push_back(STANDARD_LIST3);
+    chopCorrect.push_back(list_make());
+
+    chopCorrect.push_back(list_make());
+    chopCorrect.push_back(list_make(0, list_make()));
+    chopCorrect.push_back(list_make());
+    chopCorrect.push_back(list_make(4, list_make()));
+
+    chopCorrect.push_back(list_make(1, list_make()));
+
+    list_t stress1 = list_make();
+
+    for (int i = 8789; i >= 0 ; i--) {
+        stress1 = list_make((i % 10), stress1);
+    }
+
+    chopCorrect.push_back(stress1);
+
+    list_t stress2 = list_make();
+
+    for (int i = 42; i >= 0; i--) {
+        stress2 = list_make(i, stress2);
+    }
+
+    chopCorrect.push_back(stress2);
+
+    return;
+}
+
 
 bool checkListsEqual(list_t first, list_t second, bool equal)
 {
@@ -427,7 +572,9 @@ void testProductFunction(int &totalCases, int &casesPassed)
     int product_edge2 = 0;
     int product_edge3 = 0;
     int product_edge4 = 0;
-    
+
+    int product_stress = 0;
+
     product_result1 = product(STANDARD_LIST1);
     totalCases++;
     cout << endl << ".";
@@ -459,7 +606,11 @@ void testProductFunction(int &totalCases, int &casesPassed)
     product_edge4 = product(EDGE_LIST4);
     totalCases++;
     cout << ".";
-    
+
+    product_stress = product(STRESS_LIST1);
+    totalCases++;
+    cout << ".";
+
     if (product_result1 == 24) {
         casesPassed++;
     }
@@ -516,8 +667,61 @@ void testProductFunction(int &totalCases, int &casesPassed)
         cout << "\nProduct Case 8 failed with result: " << product_edge4 << endl;
     }
 
+    if (product_stress == 1) {
+        casesPassed++;
+    }
+    else if (DIAGNOSTIC) {
+        cout << "\nProduct Case 9 failed with result: " << product_stress << endl;
+    }
+
     return;
 }
+
+void testAccumulateFunction(int &totalCases, int &casesPassed, const vector <list_t> &inputs)
+{
+    vector <int> results(inputs.size());
+    vector <int> accumulateCorrect;
+
+    makeAccumulateLists(accumulateCorrect);
+
+    cout << endl;
+
+    for (unsigned int i = 0; i < inputs.size(); i++)
+    {
+        if (i == 8) {
+            results.at(i) = accumulate(inputs.at(i), multiplication, 1);
+        }
+        else if (i > 8) {
+            results.at(i) = accumulate(inputs.at(i), addition, 0);
+
+        }
+        else {
+            if ((i % 2) == 0) {
+                results.at(i) = accumulate(inputs.at(i), addition, 0);
+            }
+            else {
+                results.at(i) = accumulate(inputs.at(i), multiplication, 1);
+            }
+        }
+
+        totalCases++;
+        
+        if (results.at(i) == accumulateCorrect.at(i)) {
+            casesPassed++;
+            cerr << ".";
+        }
+        else {
+            cerr << "x";
+            
+            if (DIAGNOSTIC) {
+                cout << "\nAccumulate Case " << i + 1 << " failed with result: " << results.at(i) << endl;
+            }
+        }
+    }
+    
+    return;
+}
+
 
 void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName)
 {
@@ -536,7 +740,36 @@ void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t),
             cerr << ".";
         }
         else {
-            cout << "x";
+            cerr << "x";
+            
+            if (DIAGNOSTIC) {
+                cout << "\n" << fnName << " Case " << i + 1 << " failed with result: ";
+                list_print(results.at(i));
+                cout << endl;
+            }
+        }
+    }
+
+    return;
+}
+
+void testAppendFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName)
+{
+    vector <list_t> results(inputs.size() - 1);
+    
+    cout << endl;
+    
+    for (unsigned int i = 0; i < inputs.size() - 1; i++)
+    {
+        results.at(i) = fn(inputs.at(i), inputs.at(i));
+        totalCases++;
+        
+        if (checkListsEqual(results.at(i), correct.at(i), true)) {
+            casesPassed++;
+            cerr << ".";
+        }
+        else {
+            cerr << "x";
             
             if (DIAGNOSTIC) {
                 cout << "\n" << fnName << " Case " << i + 1 << " failed with result: ";
@@ -554,19 +787,19 @@ void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list
     vector <list_t> results(inputs.size());
     
     cout << endl;
-    
+
     for (unsigned int i = 0; i < inputs.size(); i++)
     {
-        
+        cout << i << endl;
         results.at(i) = fn(inputs.at(i), numbers.at(i));
         totalCases++;
-        
+
         if (checkListsEqual(results.at(i), correct.at(i), true)) {
             casesPassed++;
             cerr << ".";
         }
         else {
-            cout << "x";
+            cerr << "x";
             
             if (DIAGNOSTIC) {
                 cout << "\n" << fnName << " Case " << i + 1 << " failed with result: ";
@@ -577,4 +810,14 @@ void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list
     }
     
     return;
+}
+
+int addition(int x, int y)
+{
+    return x + y;
+}
+
+int multiplication(int x, int y)
+{
+    return x * y;
 }
