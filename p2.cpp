@@ -318,17 +318,19 @@ static bool tree_covered_by(tree_t tree, tree_t tree_covered)
         return false;
     }
 
-    if (tree_isEmpty(tree_left(tree)) && !tree_isEmpty(tree_left(tree_covered)))
+    else if (tree_isEmpty(tree_left(tree)) &&
+             !tree_isEmpty(tree_left(tree_covered)))
     {
         return false;
     }
 
-    if (tree_isEmpty(tree_right(tree)) && !tree_isEmpty(tree_right(tree_covered)))
+    else if (tree_isEmpty(tree_right(tree)) &&
+             !tree_isEmpty(tree_right(tree_covered)))
     {
         return false;
     }
 
-    if (tree_elt(tree) == tree_elt(tree_covered))
+    else if (tree_elt(tree) == tree_elt(tree_covered))
     {
         if (tree_isEmpty(tree_left(tree_covered)) &&
             tree_isEmpty(tree_right(tree_covered)))
@@ -352,35 +354,8 @@ static bool tree_covered_by(tree_t tree, tree_t tree_covered)
 
     else
     {
-        if (tree_isEmpty(tree_left(tree)) &&
-            tree_isEmpty(tree_right(tree)))
-        {
-            
-        }
+        return false;
     }
-    
-    
-    
-    
-    
-    
-    
-//    
-//    
-//    
-//    
-//    else if (tree_isEmpty(tree_left(tree)) && tree_isEmpty(tree_left(tree_covered)) && tree_isEmpty(tree_right(tree)) && tree_isEmpty(tree_right(tree_covered))) {
-//        return true;
-//    }
-//    else if (tree_isEmpty(tree_left(tree)) && !tree_isEmpty(tree_left(tree_covered))) {
-//        return false;
-//    }
-//    else if (tree_isEmpty(tree_right(tree)) && !tree_isEmpty(tree_right(tree_covered))) {
-//        return false;
-//    }
-//    else {
-//        return tree_covered_by(tree_left(tree), tree_covered) || tree_covered_by(tree_right(tree), tree_covered);
-//    }
 }
 
 //--------------------------------------------------------//
