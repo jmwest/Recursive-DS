@@ -27,6 +27,9 @@ static list_t chop_helper(list_t list, list_t list_chopped, unsigned int n);
 
 static int fib_tail_helper(int n, int currentN, int currentNumber, int result);
 
+static bool tree_covered_by(tree_t tree, tree_t tree_covered);
+static unsigned int insert_position(int elt, list_t sorted_list, unsigned int position);
+
 //--------------------------------------------------------//
 int sum(list_t list)
 {
@@ -293,11 +296,89 @@ list_t traversal(tree_t tree)
 //--------------------------------------------------------//
 bool contained_by(tree_t A, tree_t B)
 {
-    return false;
+    return tree_covered_by(B, A);
+}
+
+static bool tree_covered_by(tree_t tree, tree_t tree_covered)
+{
+    if (tree_elt(tree) == tree_elt(tree_covered))
+    {
+        if (tree_isEmpty(tree_left(tree_covered)) &&
+            tree_isEmpty(tree_right(tree_covered)))
+        {
+            return true;
+        }
+        else if (tree_isEmpty(tree_left(tree_covered)))
+        {
+            return tree_covered_by(tree_right(tree), tree_right(tree_covered));
+        }
+        else if (tree_isEmpty(tree_right(tree_covered)))
+        {
+            return tree_covered_by(tree_left(tree), tree_left(tree_covered));
+        }
+        else
+        {
+            return tree_covered_by(tree_left(tree), tree_left(tree_covered)) &&
+                tree_covered_by(tree_right(tree), tree_right(tree_covered));
+        }
+    }
+
+    else
+    {
+        if (tree_isEmpty(tree_left(tree)) &&
+            tree_isEmpty(tree_right(tree)))
+        {
+            
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    else if (tree_isEmpty(tree_left(tree)) && tree_isEmpty(tree_left(tree_covered)) && tree_isEmpty(tree_right(tree)) && tree_isEmpty(tree_right(tree_covered))) {
+        return true;
+    }
+    else if (tree_isEmpty(tree_left(tree)) && !tree_isEmpty(tree_left(tree_covered))) {
+        return false;
+    }
+    else if (tree_isEmpty(tree_right(tree)) && !tree_isEmpty(tree_right(tree_covered))) {
+        return false;
+    }
+    else {
+        return tree_covered_by(tree_left(tree), tree_covered) || tree_covered_by(tree_right(tree), tree_covered);
+    }
 }
 
 //--------------------------------------------------------//
 tree_t insert_tree(int elt, tree_t tree)
 {
+    list_t sorted_list;
+    list_t inserted_sorted_list;
+
+    sorted_list = traversal(tree);
+
+    unsigned int insert_pos = insert_position(elt, sorted_list, 0);
+
+    inserted_sorted_list = insert_list(sorted_list, list_make(elt, list_make()), insert_pos);
+
     return tree;
+}
+
+static unsigned int insert_position(int elt, list_t sorted_list, unsigned int position)
+{
+    if (elt <= list_first(sorted_list))
+    {
+        return position;
+    }
+    else
+    {
+        return insert_position(elt, list_rest(sorted_list), position + 1);
+    }
 }
