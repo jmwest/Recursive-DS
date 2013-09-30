@@ -790,7 +790,6 @@ void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list
 
     for (unsigned int i = 0; i < inputs.size(); i++)
     {
-        cout << i << endl;
         results.at(i) = fn(inputs.at(i), numbers.at(i));
         totalCases++;
 

@@ -175,18 +175,17 @@ list_t rotate(list_t list, unsigned int n)
 
 static list_t rotate_helper(list_t list, list_t rotatedList, unsigned int n)
 {
-    if (n != 0) {
-        if ((n - 1) == 0) {
-            return rotate_helper(reverse(list_rest(list)), reverse(list_make(list_first(list), rotatedList)), n - 1);
-        }
+    if (list_isEmpty(list)) {
+        list = reverse(rotatedList);
+        rotatedList = list_make();
+    }
 
+    if (n == 0) {
+        return append(list, reverse(rotatedList));
+    }
+    else {
         return rotate_helper(list_rest(list), list_make(list_first(list), rotatedList), n - 1);
     }
-    else if (!list_isEmpty(list)) {
-        return rotate_helper(list_rest(list), list_make(list_first(list), rotatedList), n);
-    }
-
-    return reverse(rotatedList);
 }
 
 //--------------------------------------------------------//
