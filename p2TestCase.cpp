@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "p2.h"
-#include "recursive.h"
 
 using namespace std;
 

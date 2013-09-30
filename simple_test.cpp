@@ -27,5 +27,19 @@ int main()
     list_print(append(listA, listB));
     cout << endl;
 
+    cerr << endl << "Fibonacci Regular Recursive: ";
+
+    for (int i = 0; i < 20; i++) {
+        cerr << fib(i) << " ";
+    }
+
+    cerr << endl << "  Fibonacci Tail Recursive : ";
+    
+    for (int i = 0; i < 20; i++) {
+        cerr << fib_tail(i) << " ";
+    }
+
+    cerr << endl;
+
     return 0;
 }

@@ -255,13 +255,13 @@ int fib_tail(int n)
         return 1;
     }
 
-    return fib_tail_helper(n, 2, 0, 1);
+    return fib_tail_helper(n, 2, 1, 1);
 }
 
 static int fib_tail_helper(int n, int currentN, int currentNumber, int result)
 {
-    if (currentN + 1 == n) {
-        return currentNumber + result;
+    if (currentN == n) {
+        return result;
     }
 
     return fib_tail_helper(n, currentN + 1, result, currentNumber + result);
