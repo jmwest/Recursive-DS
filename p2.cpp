@@ -297,6 +297,15 @@ list_t traversal(tree_t tree)
 //--------------------------------------------------------//
 bool contained_by(tree_t A, tree_t B)
 {
+    if (tree_isEmpty(B)) {
+        if (!tree_isEmpty(A)) {
+            return false;
+        }
+//        else {
+//            return true;
+//        }
+    }
+
     if (tree_covered_by(B, A))
     {
         return true;
