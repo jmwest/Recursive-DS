@@ -370,7 +370,7 @@ tree_t insert_tree(int elt, tree_t tree)
         }
         else
         {
-            return insert_tree(elt, tree_right(tree));
+            return tree_make(tree_elt(tree), tree_left(tree), insert_tree(elt, tree_right(tree)));
         }
     }
     else
@@ -380,7 +380,7 @@ tree_t insert_tree(int elt, tree_t tree)
         }
         else
         {
-            return insert_tree(elt, tree_left(tree));
+            return tree_make(tree_elt(tree), insert_tree(elt, tree_left(tree)), tree_right(tree));
         }
     }
 }
