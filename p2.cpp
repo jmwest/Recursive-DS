@@ -160,7 +160,7 @@ static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int))
         filteredList = list_make(list_first(list), filteredList);
     }
 
-    return filter_helper(list, filteredList, fn);
+    return filter_helper(list_rest(list), filteredList, fn);
 }
 
 //--------------------------------------------------------//

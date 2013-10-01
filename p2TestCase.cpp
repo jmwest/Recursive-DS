@@ -18,8 +18,9 @@ void makeGlobalLists(vector <list_t> &inputList);
 void makeAccumulateLists(vector <int> &accumulateCorrect);
 void makeReverseLists(vector <list_t> &reverseCorrectList);
 void makeAppendLists(vector <list_t> &appendCorrect);
-void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect);
+void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect, vector <list_t> &filterCorrect);
 void makeRotateLists(vector <list_t> &rotateCorrect, vector <int> &numbers);
+void makeInsertLists(vector <list_t> &insertCorrect, vector <list_t> &secondInputs, vector <unsigned int> &insertPositions);
 void makeChopLists(vector <list_t> &chopCorrect, vector <int> &numbers);
 
 bool checkListsEqual(list_t first, list_t second, bool equal);
@@ -30,10 +31,14 @@ void testProductFunction(int &totalCases, int &casesPassed);
 void testAccumulateFunction(int &totalCases, int &casesPassed, const vector <list_t> &inputs);
 void testListFNFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName);
 void testAppendFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, list_t), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName);
+void testFilterFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, bool (*fn)(int)), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName);
 void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, unsigned int), const vector <list_t> &inputs, const vector <int> &numbers, const vector <list_t> &correct, const string &fnName);
+void testInsertFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, list_t, unsigned int), const vector <list_t> &firstInput, const vector <list_t> &secondInput, const vector <unsigned int> &insertPos, const vector <list_t> &correct, const string &fnName);
 
 int addition(int x, int y);
 int multiplication(int x, int y);
+
+bool isPrime(int x);
 
 bool DIAGNOSTIC = false;
 
@@ -50,7 +55,6 @@ list_t EDGE_LIST4;
 list_t STRESS_LIST1;
 list_t STRESS_LIST2;
 list_t STRESS_LIST3;
-list_t STRESS_LIST4;
 
 int main()
 {
@@ -62,9 +66,12 @@ int main()
     vector <list_t> evenCorrectList;
     vector <list_t> filterCorrect;
     vector <list_t> rotateCorrect;
+    vector <list_t> insertCorrect;
     vector <list_t> chopCorrect;
     vector <int> rotateNumbers;
+    vector <unsigned int> insertPositions;
     vector <int> chopLength;
+    vector <list_t> insertSecondList;
 
     int totalCases = 0;
     int casesPassed = 0;
@@ -82,8 +89,9 @@ int main()
     makeGlobalLists(inputList);
     makeReverseLists(reverseCorrectList);
     makeAppendLists(appendCorrect);
-    makeFilterLists(oddCorrectList, evenCorrectList);
+    makeFilterLists(oddCorrectList, evenCorrectList, filterCorrect);
     makeRotateLists(rotateCorrect, rotateNumbers);
+    makeInsertLists(insertCorrect, insertSecondList, insertPositions);
     makeChopLists(chopCorrect, chopLength);
 
     cout << endl << "Starting test cases for p2..." << endl << "-----------------------------" << endl;
@@ -95,7 +103,9 @@ int main()
     testAppendFunction(totalCases, casesPassed, append, inputList, appendCorrect, "Append");
     testListFNFunction(totalCases, casesPassed, filter_even, inputList, evenCorrectList, "Filter Even");
     testListFNFunction(totalCases, casesPassed, filter_odd, inputList, oddCorrectList, "Filter Odd");
+    testFilterFunction(totalCases, casesPassed, filter, inputList, filterCorrect, "Filter");
     testRotateChopFunction(totalCases, casesPassed, rotate, inputList, rotateNumbers, rotateCorrect, "Rotate");
+    testInsertFunction(totalCases, casesPassed, insert_list, inputList, insertSecondList, insertPositions, insertCorrect, "Insert_List");
     testRotateChopFunction(totalCases, casesPassed, chop, inputList, chopLength, chopCorrect, "Chop");
 
     cout << "\n\nTest Cases passed: " << casesPassed << endl << " Test Case total : " << totalCases << endl << endl;
@@ -122,7 +132,6 @@ void makeGlobalLists(vector <list_t> &inputList)
     STRESS_LIST1 = list_make();
     STRESS_LIST2 = list_make();
     STRESS_LIST3 = list_make();
-    STRESS_LIST4 = list_make();
 
     for (int i = 4; i > 0; i--) {
         STANDARD_LIST1 = list_make(i, STANDARD_LIST1);
@@ -235,8 +244,47 @@ void makeAppendLists(vector <list_t> &appendCorrect)
     return;
 }
 
-void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect)
+void makeFilterLists(vector <list_t> &filterOddCorrect, vector <list_t> &filterEvenCorrect, vector <list_t> &filterCorrect)
 {
+    filterCorrect.push_back(list_make(2, list_make(3, list_make())));
+    filterCorrect.push_back(list_make(3, list_make(2, list_make())));
+    filterCorrect.push_back(list_make(2, list_make(3, list_make(5, list_make()))));
+    filterCorrect.push_back(list_make());
+
+    filterCorrect.push_back(list_make());
+    filterCorrect.push_back(list_make());
+    filterCorrect.push_back(EDGE_LIST3);
+    filterCorrect.push_back(list_make(2, list_make()));
+
+    filterCorrect.push_back(list_make());
+
+    list_t stressList2 = list_make();
+    list_t stressList3 = list_make();
+
+    for (int i = 3999; i >= 0; i--) {
+        if ((i % 4) == 3) {
+            stressList2 = list_make(7, stressList2);
+        }
+        else if ((i % 4) == 2) {
+            stressList2 = list_make(5, stressList2);
+        }
+        else if ((i % 4) == 1) {
+            stressList2 = list_make(3, stressList2);
+        }
+        else {
+            stressList2 = list_make(2, stressList2);
+        }
+    }
+
+    for (int i = 99; i >= 0; i--) {
+        if (isPrime(i)) {
+            stressList3 = list_make(i, stressList3);
+        }
+    }
+
+    filterCorrect.push_back(stressList2);
+    filterCorrect.push_back(stressList3);
+
     filterOddCorrect.push_back(list_make(1, list_make(3, list_make())));
     filterOddCorrect.push_back(list_make(3, list_make(1, list_make())));
     filterOddCorrect.push_back(list_make(3, list_make(5, list_make())));
@@ -317,6 +365,72 @@ void makeRotateLists(vector <list_t> &rotateCorrect, vector <int> &numbers)
     rotateCorrect.push_back(STRESS_LIST1);
     rotateCorrect.push_back(STRESS_LIST2);
     rotateCorrect.push_back(STRESS_LIST3);
+
+    return;
+}
+
+void makeInsertLists(vector <list_t> &insertCorrect, vector <list_t> &secondInputs, vector <unsigned int> &insertPositions)
+{
+    secondInputs.push_back(list_make(4, list_make(5, list_make(6, list_make()))));
+    secondInputs.push_back(list_make(7, list_make(6, list_make(5, list_make()))));
+    secondInputs.push_back(STANDARD_LIST3);
+    secondInputs.push_back(list_make(2, list_make(2, list_make())));
+
+    secondInputs.push_back(list_make(12, list_make()));
+    secondInputs.push_back(list_make(2, list_make(1, list_make())));
+    secondInputs.push_back(list_make(8, list_make(9, list_make())));
+    secondInputs.push_back(list_make(3, list_make()));
+
+    secondInputs.push_back(list_make(2, list_make(2, list_make(2, list_make(2, list_make(2, list_make(2, list_make())))))));
+    secondInputs.push_back(list_make());
+    secondInputs.push_back(STRESS_LIST3);
+
+    insertPositions.push_back(2);
+    insertPositions.push_back(1);
+    insertPositions.push_back(4);
+    insertPositions.push_back(0);
+
+    insertPositions.push_back(0);
+    insertPositions.push_back(0);
+    insertPositions.push_back(1);
+    insertPositions.push_back(1);
+
+    insertPositions.push_back(2000);
+    insertPositions.push_back(5760);
+    insertPositions.push_back(0);
+
+    insertCorrect.push_back(list_make(1, list_make(2, list_make(4, list_make(5, list_make(6, list_make(3, list_make(4, list_make()))))))));
+    insertCorrect.push_back(list_make(4, list_make(7, list_make(6, list_make(5, list_make(3, list_make(2, list_make(1, list_make()))))))));
+    insertCorrect.push_back(list_make(2, list_make(3, list_make(4, list_make(5, list_make(2, list_make(3, list_make(4, list_make(5, list_make())))))))));
+    insertCorrect.push_back(list_make(2, list_make(2, list_make(1, list_make(1, list_make(1, list_make(1, list_make())))))));
+
+    insertCorrect.push_back(list_make(12, list_make()));
+    insertCorrect.push_back(list_make(2, list_make(1, list_make(0, list_make()))));
+    insertCorrect.push_back(list_make(7, list_make(8, list_make(9, list_make()))));
+    insertCorrect.push_back(list_make(4, list_make(3, list_make(2, list_make()))));
+
+    list_t stressList1 = list_make();
+    list_t stressList3 = list_make();
+
+    for (int i = 9999; i >= 0; i--) {
+        stressList1 = list_make(1, stressList1);
+
+        if (i == 2000) {
+            for (int j = 0; j < 6; j++) {
+                stressList1 = list_make(2, stressList1);
+            }
+        }
+    }
+
+    for (int i = 0; i < 2; i++) {
+        for (int j = 99; j >= 0; j--) {
+            stressList3 = list_make(j, stressList3);
+        }
+    }
+
+    insertCorrect.push_back(stressList1);
+    insertCorrect.push_back(STRESS_LIST2);
+    insertCorrect.push_back(stressList3);
 
     return;
 }
@@ -781,6 +895,35 @@ void testAppendFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, 
     return;
 }
 
+void testFilterFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, bool (*fn)(int)), const vector <list_t> &inputs, const vector <list_t> &correct, const string &fnName)
+{
+    vector <list_t> results(inputs.size());
+    
+    cout << endl;
+    
+    for (unsigned int i = 0; i < inputs.size(); i++)
+    {
+        results.at(i) = fn(inputs.at(i), isPrime);
+        totalCases++;
+        
+        if (checkListsEqual(results.at(i), correct.at(i), true)) {
+            casesPassed++;
+            cerr << ".";
+        }
+        else {
+            cerr << "x";
+            
+            if (DIAGNOSTIC) {
+                cout << "\n" << fnName << " Case " << i + 1 << " failed with result: ";
+                list_print(results.at(i));
+                cout << endl;
+            }
+        }
+    }
+    
+    return;
+}
+
 void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, unsigned int), const vector <list_t> &inputs, const vector <int> &numbers, const vector <list_t> &correct, const string &fnName)
 {
     vector <list_t> results(inputs.size());
@@ -810,6 +953,35 @@ void testRotateChopFunction(int &totalCases, int &casesPassed, list_t (*fn)(list
     return;
 }
 
+void testInsertFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, list_t, unsigned int), const vector <list_t> &firstInput, const vector <list_t> &secondInput, const vector <unsigned int> &insertPos, const vector <list_t> &correct, const string &fnName)
+{
+    vector <list_t> results(firstInput.size());
+    
+    cout << endl;
+    
+    for (unsigned int i = 0; i < firstInput.size(); i++)
+    {
+        results.at(i) = fn(firstInput.at(i), secondInput.at(i), insertPos.at(i));
+        totalCases++;
+        
+        if (checkListsEqual(results.at(i), correct.at(i), true)) {
+            casesPassed++;
+            cerr << ".";
+        }
+        else {
+            cerr << "x";
+            
+            if (DIAGNOSTIC) {
+                cout << "\n" << fnName << " Case " << i + 1 << " failed with result: ";
+                list_print(results.at(i));
+                cout << endl;
+            }
+        }
+    }
+
+    return;
+}
+
 int addition(int x, int y)
 {
     return x + y;
@@ -818,4 +990,22 @@ int addition(int x, int y)
 int multiplication(int x, int y)
 {
     return x * y;
+}
+
+bool isPrime(int x)
+{
+    bool isPrime = true;
+
+    if (x < 2) {
+        isPrime = false;
+    }
+        else {
+        for (int i = (x - 1); i > 1; i--) {
+            if ((x % i) == 0) {
+                isPrime = false;
+            }
+        }
+    }
+
+    return isPrime;
 }
