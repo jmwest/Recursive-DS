@@ -37,6 +37,7 @@ void testInsertFunction(int &totalCases, int &casesPassed, list_t (*fn)(list_t, 
 
 int addition(int x, int y);
 int multiplication(int x, int y);
+int sumSquares(int x, int y);
 
 bool isPrime(int x);
 
@@ -831,6 +832,20 @@ void testAccumulateFunction(int &totalCases, int &casesPassed, const vector <lis
             }
         }
     }
+
+    totalCases++;
+
+    if (accumulate(list_make(1, list_make(1, list_make(1, list_make()))), sumSquares, 0) == 6) {
+        casesPassed++;
+        cerr << ".";
+    }
+    else {
+        cerr << "x";
+        
+        if (DIAGNOSTIC) {
+            cout << "\nAccumulate Case " << 12 << " failed with result: " << accumulate(list_make(1, list_make(1, list_make(1, list_make()))), sumSquares, 0) << endl;
+        }
+    }
     
     return;
 }
@@ -990,6 +1005,11 @@ int addition(int x, int y)
 int multiplication(int x, int y)
 {
     return x * y;
+}
+
+int sumSquares(int x, int y)
+{
+    return (x + y + 1);
 }
 
 bool isPrime(int x)

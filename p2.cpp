@@ -12,27 +12,60 @@
 using namespace std;
 
 static int addNumbers(int x, int y);
+// EFFECTS: adds the two numbers, x and y, and returns them.
+
 static int multiplyNumbers(int x, int y);
+// EFFECTS: multiplies the two numbers, x and y, and returns them.
+
 static int algebraic_helper(int result, list_t list, int (*fn)(int, int));
+// REQUIRES: fn must be an associative function.
+// EFFECTS: does the operation, fn, on the result and the given list and returns the final result.
 
 static list_t reverse_helper(list_t list, list_t reverseList);
+// EFFECTS: puts the given list, list, backwards into reverseList and returns reverseList.
+
 static list_t append_helper(list_t first, list_t second);
+// EFFECTS: appends the second list onto the first one returns the result.
 
 static list_t filter_odd_or_even_helper(list_t list, list_t filteredList, int remainderValue);
+// REQUIRES: the remainderValue must either be 0 or 1 depending on if the list is
+//      being filtered odd or even
+// EFFECTS: filters the given list to only contain odd or even values.
+//      The filteredList contains all elements of list that fit the requirement
+
 static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int));
+// REQUIRES: the function, fn, must be a function that filters an element to given criteria
+//      and returns a bool signifying whether the element passed or failed to meet the criteria
+// EFFECTS: filters the given list to only contain element that pass the given function.
+//      The filteredList contains all elements of list that fit the requirement
 
 static list_t rotate_helper(list_t list, list_t rotatedList, unsigned int n);
+// REQUIRES: the value n must be >= 0.
+// EFFECTS: rotates the given list n times by placing the first element at the end each time.
+
 static list_t insert_list_helper(list_t first, list_t second, list_t combined, unsigned int n);
+// REQUIRES: the value n must be >= 0 and <= the length of first.
+// EFFECTS: inserts the given list, second, at the index n, then returns the combined list.
+
 static list_t chop_helper(list_t list, unsigned int n);
+// REQUIRES: the value n must be >= 0.
+// EFFECTS: n elements are cut off of list and then the new list is returned.
 
 static int fib_tail_helper(int n, int currentN, int currentNumber, int result);
+// REQUIRES: the value n must be >= 0.
+// EFFECTS: calculates the nth number in the Fibonacci sequence and returns it.
+
 
 static bool tree_covered_by(tree_t tree, tree_t tree_covered);
+// EFFECTS: determines whether the tree, tree_covered, is directly covered by the tree, tree.
+//      returns true if it covers tree_covered, false otherwise.
+
 
 //--------------------------------------------------------//
 int sum(list_t list)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return 0;
     }
 
@@ -41,7 +74,8 @@ int sum(list_t list)
 
 int product(list_t list)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return 1;
     }
 
@@ -50,9 +84,12 @@ int product(list_t list)
 
 int accumulate(list_t list, int (*fn)(int, int), int identity)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return identity;
     }
+
+    list = reverse(list);
     
     return algebraic_helper(fn(identity, list_first(list)), list_rest(list), fn);
 }
@@ -85,7 +122,8 @@ list_t reverse(list_t list)
 
 static list_t reverse_helper(list_t list, list_t reverseList)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return reverseList;
     }
 
@@ -100,11 +138,12 @@ list_t append(list_t first, list_t second)
 
 list_t append_helper(list_t first, list_t second)
 {
-    if (!list_isEmpty(first)) {
+    if (!list_isEmpty(first))
+    {
         return append_helper(list_rest(first), list_make(list_first(first), second));
-
     }
-    else {
+    else
+    {
         return second;
     }
 }
@@ -112,7 +151,8 @@ list_t append_helper(list_t first, list_t second)
 //--------------------------------------------------------//
 list_t filter_odd(list_t list)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return list;
     }
 
@@ -121,7 +161,8 @@ list_t filter_odd(list_t list)
 
 list_t filter_even(list_t list)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return list;
     }
 
@@ -131,10 +172,12 @@ list_t filter_even(list_t list)
 //--------------------------------------------------------//
 static list_t filter_odd_or_even_helper(list_t list, list_t filteredList, int remainderValue)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return reverse(filteredList);
     }
-    else if ((list_first(list) % 2) == remainderValue) {
+    else if ((list_first(list) % 2) == remainderValue)
+    {
         filteredList = list_make(list_first(list), filteredList);
     }
 
@@ -144,7 +187,8 @@ static list_t filter_odd_or_even_helper(list_t list, list_t filteredList, int re
 //--------------------------------------------------------//
 list_t filter(list_t list, bool (*fn)(int))
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return list;
     }
 
@@ -153,10 +197,12 @@ list_t filter(list_t list, bool (*fn)(int))
 
 static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int))
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return reverse(filteredList);
     }
-    else if (fn(list_first(list))) {
+    else if (fn(list_first(list)))
+    {
         filteredList = list_make(list_first(list), filteredList);
     }
 
@@ -166,7 +212,8 @@ static list_t filter_helper(list_t list, list_t filteredList, bool (*fn)(int))
 //--------------------------------------------------------//
 list_t rotate(list_t list, unsigned int n)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         return list;
     }
 
@@ -175,15 +222,18 @@ list_t rotate(list_t list, unsigned int n)
 
 static list_t rotate_helper(list_t list, list_t rotatedList, unsigned int n)
 {
-    if (list_isEmpty(list)) {
+    if (list_isEmpty(list))
+    {
         list = reverse(rotatedList);
         rotatedList = list_make();
     }
 
-    if (n == 0) {
+    if (n == 0)
+    {
         return append(list, reverse(rotatedList));
     }
-    else {
+    else
+    {
         return rotate_helper(list_rest(list), list_make(list_first(list), rotatedList), n - 1);
     }
 }
@@ -191,10 +241,12 @@ static list_t rotate_helper(list_t list, list_t rotatedList, unsigned int n)
 //--------------------------------------------------------//
 list_t insert_list(list_t first, list_t second, unsigned int n)
 {
-    if (list_isEmpty(first)) {
+    if (list_isEmpty(first))
+    {
         return second;
     }
-    else if (list_isEmpty(second)) {
+    else if (list_isEmpty(second))
+    {
         return first;
     }
 
@@ -203,17 +255,22 @@ list_t insert_list(list_t first, list_t second, unsigned int n)
 
 static list_t insert_list_helper(list_t first, list_t second, list_t combined, unsigned int n)
 {
-    if (n != 0) {
+    if (n != 0)
+    {
         return insert_list_helper(list_rest(first), second, list_make(list_first(first), combined), n - 1);
     }
-    else {
-        if (!list_isEmpty(second)) {
+    else
+    {
+        if (!list_isEmpty(second))
+        {
             return insert_list_helper(first, list_rest(second), list_make(list_first(second), combined), n);
         }
-        else if (!list_isEmpty(first)) {
+        else if (!list_isEmpty(first))
+        {
             return insert_list_helper(list_rest(first), second, list_make(list_first(first), combined), n);
         }
     }
+
     return reverse(combined);
 }
 
@@ -225,7 +282,8 @@ list_t chop(list_t l, unsigned int n)
 
 static list_t chop_helper(list_t list, unsigned int n)
 {
-    if (n == 0) {
+    if (n == 0)
+    {
         return reverse(list);
     }
 
@@ -235,10 +293,12 @@ static list_t chop_helper(list_t list, unsigned int n)
 //--------------------------------------------------------//
 int fib(int n)
 {
-    if (n == 0) {
+    if (n == 0)
+    {
         return 0;
     }
-    else if (n == 1) {
+    else if (n == 1)
+    {
         return 1;
     }
 
@@ -248,10 +308,12 @@ int fib(int n)
 //--------------------------------------------------------//
 int fib_tail(int n)
 {
-    if (n == 0) {
+    if (n == 0)
+    {
         return 0;
     }
-    else if (n == 1) {
+    else if (n == 1)
+    {
         return 1;
     }
 
@@ -260,7 +322,8 @@ int fib_tail(int n)
 
 static int fib_tail_helper(int n, int currentN, int currentNumber, int result)
 {
-    if (currentN == n) {
+    if (currentN == n)
+    {
         return result;
     }
 
@@ -270,7 +333,8 @@ static int fib_tail_helper(int n, int currentN, int currentNumber, int result)
 //--------------------------------------------------------//
 int tree_sum(tree_t tree)
 {
-    if (tree_isEmpty(tree)) {
+    if (tree_isEmpty(tree))
+    {
         return 0;
     }
 
@@ -280,16 +344,23 @@ int tree_sum(tree_t tree)
 //--------------------------------------------------------//
 list_t traversal(tree_t tree)
 {
-    if (tree_isEmpty(tree_left(tree)) && tree_isEmpty(tree_right(tree))) {
+    if (tree_isEmpty(tree_left(tree)) && 
+        tree_isEmpty(tree_right(tree)))
+    {
         return list_make(tree_elt(tree), list_make());
     }
-    else if (tree_isEmpty(tree_left(tree)) && !tree_isEmpty(tree_right(tree))) {
+    else if (tree_isEmpty(tree_left(tree)) &&
+            !tree_isEmpty(tree_right(tree)))
+    {
         return list_make(tree_elt(tree), traversal(tree_right(tree)));
     }
-    else if (!tree_isEmpty(tree_left(tree)) && tree_isEmpty(tree_right(tree))) {
+    else if (!tree_isEmpty(tree_left(tree)) &&
+             tree_isEmpty(tree_right(tree)))
+    {
         return reverse(list_make(tree_elt(tree), traversal(tree_left(tree))));
     }
-    else {
+    else
+    {
         return append(traversal(tree_left(tree)), list_make(tree_elt(tree), traversal(tree_right(tree))));
     }
 }
@@ -297,20 +368,20 @@ list_t traversal(tree_t tree)
 //--------------------------------------------------------//
 bool contained_by(tree_t A, tree_t B)
 {
-    if (tree_isEmpty(B)) {
-        if (!tree_isEmpty(A)) {
+    if (tree_isEmpty(B))
+    {
+        if (!tree_isEmpty(A))
+        {
             return false;
         }
-//        else {
-//            return true;
-//        }
     }
 
     if (tree_covered_by(B, A))
     {
         return true;
     }
-    else if (tree_isEmpty(tree_left(B)) && tree_isEmpty(tree_right(B)))
+    else if (tree_isEmpty(tree_left(B)) &&
+             tree_isEmpty(tree_right(B)))
     {
         return false;
     }
@@ -374,7 +445,8 @@ tree_t insert_tree(int elt, tree_t tree)
 {
     if (elt >= tree_elt(tree))
     {
-        if (tree_isEmpty(tree_right(tree))) {
+        if (tree_isEmpty(tree_right(tree)))
+        {
             return tree_make(tree_elt(tree), tree_left(tree), tree_make(elt, tree_make(), tree_make()));
         }
         else
@@ -384,7 +456,8 @@ tree_t insert_tree(int elt, tree_t tree)
     }
     else
     {
-        if (tree_isEmpty(tree_left(tree))) {
+        if (tree_isEmpty(tree_left(tree)))
+        {
             return tree_make(tree_elt(tree), tree_make(elt, tree_make(), tree_make()), tree_right(tree));
         }
         else

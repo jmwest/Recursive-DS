@@ -112,9 +112,6 @@ int main()
     }
     else { passed++; }
 
-    cout << passed << " out of 6!\n\n";
-
-/*
     list_t correct1 = list_make(1, list_make(2, list_make(4, list_make())));
     list_t correct2 = list_make(1, list_make(2, list_make(3, list_make(4, list_make()))));
     list_t correct3 = list_make(1, list_make(1, list_make(2, list_make(3, list_make(4, list_make(5, list_make(6, list_make(7, list_make(7, list_make())))))))));
@@ -126,8 +123,6 @@ int main()
     list_t travel3 = traversal(second);
     list_t travel4 = traversal(secondInsertOne);
     list_t travel5 = traversal(secondInsertNine);
-
-    int passed = 0;
 
     if (checkListsEqual(correct1, travel1, true)) {
         passed++;
@@ -156,15 +151,11 @@ int main()
     list_print(travel5);
     cout << endl;
 
-    cout << passed << " out of 5!\n\n";
-
     int sum1 = tree_sum(start);
     int sum2 = tree_sum(end);
     int sum3 = tree_sum(second);
     int sum4 = tree_sum(secondInsertOne);
     int sum5 = tree_sum(secondInsertNine);
-
-    int passed = 0;
 
     if (sum1 == 7) {
         passed++;
@@ -188,7 +179,7 @@ int main()
     cout << sum4 << endl;
     cout << sum5 << endl;
     
-    cout << passed << " out of 5!\n\n";
+    cout << passed << " out of 16!\n\n";
 
     tree_t candidate = insert_tree(3, start);
     tree_print(end);
@@ -230,6 +221,6 @@ int main()
     else {
         cout << "Failed\n\n\n\n";
     }
-*/
+
     return 0;
 }
