@@ -344,6 +344,10 @@ int tree_sum(tree_t tree)
 //--------------------------------------------------------//
 list_t traversal(tree_t tree)
 {
+	if (tree_isEmpty(tree)) {
+		return list_make();
+	}
+
     if (tree_isEmpty(tree_left(tree)) && 
         tree_isEmpty(tree_right(tree)))
     {
@@ -368,6 +372,10 @@ list_t traversal(tree_t tree)
 //--------------------------------------------------------//
 bool contained_by(tree_t A, tree_t B)
 {
+	if (tree_isEmpty(A)) {
+		return true;
+	}
+
     if (tree_isEmpty(B))
     {
         if (!tree_isEmpty(A))

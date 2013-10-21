@@ -39,7 +39,7 @@ bool tree_equal(tree_t t1, tree_t t2)
 
 int main()
 {
-
+	tree_t empty = tree_make();
     tree_t start = tree_make(2,
 			     tree_make(1, tree_make(), tree_make()),
 			     tree_make(4, tree_make(), tree_make()));
@@ -88,9 +88,7 @@ int main()
     if (contained_by(end, start)) {
         cout << "e,st\n";
     }
-    else {
-        passed++;
-    }
+    else { passed++; }
 
     if (contained_by(start, start)) {
         cout << "st,st\n";
@@ -108,21 +106,28 @@ int main()
     }
 
     if (contained_by(secondInsertNine, secondInsertOne)) {
-        cout << "se9,se1";
+        cout << "se9,se1\n";
     }
     else { passed++; }
+
+	if (contained_by(empty, secondInsertNine)) {
+		cout << "empty, se9\n";
+		passed++;
+	}
 
     list_t correct1 = list_make(1, list_make(2, list_make(4, list_make())));
     list_t correct2 = list_make(1, list_make(2, list_make(3, list_make(4, list_make()))));
     list_t correct3 = list_make(1, list_make(1, list_make(2, list_make(3, list_make(4, list_make(5, list_make(6, list_make(7, list_make(7, list_make())))))))));
     list_t correct4 = list_make(1, list_make(1, list_make(1, list_make(2, list_make(3, list_make(4, list_make(5, list_make(6, list_make(7, list_make(7, list_make()))))))))));
     list_t correct5 = list_make(1, list_make(1, list_make(2, list_make(3, list_make(4, list_make(5, list_make(6, list_make(7, list_make(7, list_make(9, list_make()))))))))));
+	list_t correctEmpty = list_make();
 
     list_t travel1 = traversal(start);
     list_t travel2 = traversal(end);
     list_t travel3 = traversal(second);
     list_t travel4 = traversal(secondInsertOne);
     list_t travel5 = traversal(secondInsertNine);
+	list_t travelEmpty = traversal(empty);
 
     if (checkListsEqual(correct1, travel1, true)) {
         passed++;
@@ -139,6 +144,9 @@ int main()
     if (checkListsEqual(correct5, travel5, true)) {
         passed++;
     }
+	if (checkListsEqual(correctEmpty, travelEmpty, true)) {
+		cout << "got the empty" << endl;
+	}
 
     list_print(travel1);
     cout << endl;
@@ -179,7 +187,7 @@ int main()
     cout << sum4 << endl;
     cout << sum5 << endl;
     
-    cout << passed << " out of 16!\n\n";
+    cout << passed << " out of 17!\n\n";
 
     tree_t candidate = insert_tree(3, start);
     tree_print(end);
