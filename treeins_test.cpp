@@ -111,7 +111,7 @@ int main()
     else { passed++; }
 
 	if (contained_by(empty, secondInsertNine)) {
-		cout << "empty, se9\n";
+		std::cout << "empty, se9\n";
 		passed++;
 	}
 

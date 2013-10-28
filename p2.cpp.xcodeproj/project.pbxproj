@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2725D21A17EB53C5000B8ADF /* p2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2725D21917EB53C5000B8ADF /* p2.cpp */; };
+		274FE8181815D18E0039A4E3 /* ComparatorTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 274FE8161815D18E0039A4E3 /* ComparatorTree.cpp */; };
 		2797613817EE485A00E8E4C9 /* p2TestCase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2797613717EE485A00E8E4C9 /* p2TestCase.cpp */; };
 		27D46E8918124BC4007725FC /* R2D2Tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27D46E8718124BC4007725FC /* R2D2Tree.cpp */; };
 		27DF1B7217ECB57C00163B5D /* recursive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 27DF1B6A17ECB57C00163B5D /* recursive.cpp */; };
@@ -16,6 +17,7 @@
 /* Begin PBXFileReference section */
 		2725D21217EB5330000B8ADF /* libp2.cpp.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libp2.cpp.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		2725D21917EB53C5000B8ADF /* p2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p2.cpp; sourceTree = "<group>"; };
+		274FE8161815D18E0039A4E3 /* ComparatorTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComparatorTree.cpp; sourceTree = "<group>"; };
 		2797613717EE485A00E8E4C9 /* p2TestCase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p2TestCase.cpp; sourceTree = "<group>"; };
 		27D46E8718124BC4007725FC /* R2D2Tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = R2D2Tree.cpp; sourceTree = "<group>"; };
 		27DF1B6717ECB57C00163B5D /* filter_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = filter_test.cpp; sourceTree = "<group>"; };
@@ -52,6 +54,7 @@
 				27DF1B6A17ECB57C00163B5D /* recursive.cpp */,
 				27DF1B6B17ECB57C00163B5D /* recursive.h */,
 				27D46E8718124BC4007725FC /* R2D2Tree.cpp */,
+				274FE8161815D18E0039A4E3 /* ComparatorTree.cpp */,
 				27DF1B6C17ECB57C00163B5D /* simple_test.cpp */,
 				27DF1B6D17ECB57C00163B5D /* simple_test.out */,
 				27DF1B6E17ECB57C00163B5D /* treeins_test.cpp */,
@@ -132,6 +135,7 @@
 				27DF1B7217ECB57C00163B5D /* recursive.cpp in Sources */,
 				2797613817EE485A00E8E4C9 /* p2TestCase.cpp in Sources */,
 				27D46E8918124BC4007725FC /* R2D2Tree.cpp in Sources */,
+				274FE8181815D18E0039A4E3 /* ComparatorTree.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
